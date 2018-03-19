@@ -10,7 +10,7 @@ import (
 
 // hasFs checks if d has a file system created and returns a bool.
 func hasFs(d, f string) bool {
-	o, err := exec.Command("/usr/bin/lsblk", "-n", "-o", "FSTYPE", d).Output()
+	o, err := exec.Command("/bin/lsblk", "-n", "-o", "FSTYPE", d).Output()
 	if err != nil {
 		log.Printf("Failed to read file system type of %q: %q.\n", d, err)
 		// Return true here just to be on the safe side
@@ -30,7 +30,7 @@ func hasFs(d, f string) bool {
 
 // mkfs creates file system f on device d.
 func mkfs(d, f string) error {
-	mkfsCmd := "/usr/sbin/mkfs." + f
+	mkfsCmd := "/sbin/mkfs." + f
 	cmd := exec.Command(mkfsCmd, "-q", d)
 	err := cmd.Run()
 	if err != nil {
@@ -51,7 +51,7 @@ func mount(d, p, t string) (err error) {
 		}
 	}
 	log.Printf("Mounting %q to %q.\n", d, p)
-	cmd := exec.Command("/usr/bin/mount", "-t", t, d, p)
+	cmd := exec.Command("/bin/mount", "-t", t, d, p)
 	o, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Printf("Mount failed: %q to %q: %q.\n", d, p, string(o))
